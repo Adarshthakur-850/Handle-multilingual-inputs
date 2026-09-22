@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend.Dockerfile
+    container_name: intellisummarize-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/workspace
+    environment:
+      - DATABASE_URL=sqlite:////workspace/database.db
+      - SECRET_KEY=supersecretjwtkeyforintellisummarizeai2026
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend.Dockerfile
+    container_name: intellisummarize-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
